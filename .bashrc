@@ -173,3 +173,13 @@ export PATH=$ANDROID_SDK_ROOT/cmdline-tools/tools/bin:$PATH
 
 # Qt Stuff
 export Qt_DIR=~/Qt/
+
+export PATH="$HOME/.yarn/bin:$HOME/.config/yarn/global/node_modules/.bin:$PATH"
+
+# pnpm
+export PNPM_HOME="/home/jareth/.local/share/pnpm"
+case ":$PATH:" in
+  *":$PNPM_HOME:"*) ;;
+  *) export PATH="$PNPM_HOME:$PATH" ;;
+esac
+# pnpm end
