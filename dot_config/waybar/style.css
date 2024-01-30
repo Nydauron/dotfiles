@@ -5,8 +5,8 @@
 }
 
 window#waybar {
-    background-color: rgba(43, 48, 59, 0.5);
-    border-bottom: 3px solid rgba(100, 114, 125, 0.5);
+    background-color: rgba(37, 37, 142, 0.5);
+    border-bottom: 3px solid rgba(117, 117, 163, 0.5);
     color: #ffffff;
     transition-property: background-color;
     transition-duration: .5s;
@@ -87,9 +87,24 @@ button:hover {
 #mode,
 #idle_inhibitor,
 #scratchpad,
-#mpd {
+#mpd,
+#custom-wlogout {
+    background-color: rgba(0, 0, 128, 0.4);
+    border-radius: 10000px;
+    border: 2px solid rgba(255, 255, 255, 0.4);
     padding: 0 10px;
+    margin: 4px 0px;
     color: #ffffff;
+}
+
+#custom-wlogout {
+    padding-left: 7px;
+    padding-right: 10px;
+    margin-right: 4px;
+}
+
+#clock {
+    padding-top: 3px;
 }
 
 #window,
@@ -107,74 +122,36 @@ button:hover {
     margin-right: 0;
 }
 
-#clock {
-    background-color: #64727D;
-}
-
 #battery {
-    background-color: #ffffff;
-    color: #000000;
+    padding-right: 16px;
 }
 
 #battery.charging, #battery.plugged {
-    color: #ffffff;
-    background-color: #26A65B;
+    background-color: rgba(0, 255, 0, 0.5);
 }
 
-@keyframes blink {
-    to {
-        background-color: #ffffff;
-        color: #000000;
-    }
+#battery.charging {
+    padding-right: 8px;
+}
+
+#battery.plugged {
+    padding-right: 12px;
 }
 
 #battery.critical:not(.charging) {
-    background-color: #f53c3c;
-    color: #ffffff;
-    animation-name: blink;
-    animation-duration: 0.5s;
-    animation-timing-function: linear;
-    animation-iteration-count: infinite;
-    animation-direction: alternate;
+    background-color: rgba(255, 26, 26, 0.5);
 }
 
 label:focus {
     background-color: #000000;
 }
 
-#cpu {
-    background-color: #2ecc71;
-    color: #000000;
-}
-
-#memory {
-    background-color: #9b59b6;
-}
-
-#disk {
-    background-color: #964B00;
-}
-
-#backlight {
-    background-color: #90b1b1;
-}
-
-#network {
-    background-color: #2980b9;
-}
-
 #network.disconnected {
-    background-color: #f53c3c;
-}
-
-#pulseaudio {
-    background-color: #f1c40f;
-    color: #000000;
+    background-color: rgba(255, 26, 26, 0.5);
 }
 
 #pulseaudio.muted {
-    background-color: #90b1b1;
-    color: #2a5c45;
+    background-color: rgba(255, 26, 26, 0.5);
 }
 
 #wireplumber {
@@ -200,16 +177,8 @@ label:focus {
     background-color: #ffa000;
 }
 
-#temperature {
-    background-color: #f0932b;
-}
-
 #temperature.critical {
-    background-color: #eb4d4b;
-}
-
-#tray {
-    background-color: #2980b9;
+    background-color: rgba(255, 26, 26, 0.5);
 }
 
 #tray > .passive {
