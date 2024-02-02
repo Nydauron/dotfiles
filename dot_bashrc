@@ -3,10 +3,7 @@
 # for examples
 
 # If not running interactively, don't do anything
-case $- in
-    *i*) ;;
-    *) return;;
-esac
+[[ $- != *i* ]] && return
 
 # don't put duplicate lines or lines starting with space in the history.
 # See bash(1) for more options
@@ -37,7 +34,7 @@ fi
 
 # set a fancy prompt (non-color, unless we know we "want" color)
 case "$TERM" in
-    xterm-color|*-256color) color_prompt=yes;;
+    xterm-color|*-256color|alacritty) color_prompt=yes;;
 esac
 
 # uncomment for a colored prompt, if the terminal has the capability; turned
@@ -56,7 +53,43 @@ if [ -n "$force_color_prompt" ]; then
     fi
 fi
 
-OS_ICON=""
+if [ -f /etc/os-release ]; then
+    # freedesktop.org and systemd
+    . /etc/os-release
+    OS=$NAME
+    VER=$VERSION_ID
+elif type lsb_release >/dev/null 2>&1; then
+    # linuxbase.org
+    OS=$(lsb_release -si)
+    VER=$(lsb_release -sr)
+elif [ -f /etc/lsb-release ]; then
+    # For some versions of Debian/Ubuntu without lsb_release command
+    . /etc/lsb-release
+    OS=$DISTRIB_ID
+    VER=$DISTRIB_RELEASE
+elif [ -f /etc/debian_version ]; then
+    # Older Debian/Ubuntu/etc.
+    OS=Debian
+    VER=$(cat /etc/debian_version)
+elif [ -f /etc/SuSe-release ]; then
+    # Older SuSE/etc.
+    echo "Detected Old SuSE. TODO: Please handle OS variable assignment"
+elif [ -f /etc/redhat-release ]; then
+    # Older Red Hat, CentOS, etc.
+    echo "Detected older Red Hat, CentOS, etc. TODO: Please handle OS variable assignment"
+else
+    # Fall back to uname, e.g. "Linux <version>", also works for BSD, etc.
+    OS=$(uname -s)
+    VER=$(uname -r)
+fi
+
+if [ "$OS" = "Arch Linux" ]; then
+    OS_ICON="󰣇"
+elif [ "$OS" = "Ubuntu" ]; then
+    OS_ICON=""
+else
+    OS_ICON=""
+fi
 
 if [ "$color_prompt" = yes ]; then
     # PS1='${debian_chroot:+($debian_chroot)}\[\033[01;32m\]\u\[\033[00m\]:\[\033[01;31m\]\W\[\033[00m\]\$ '
@@ -124,12 +157,18 @@ if ! shopt -oq posix; then
     fi
 fi
 
+is_wsl () {
+    # 0 = WSL, 1 = not WSL
+    cat "/proc/sys/kernel/osrelease" | awk '{print tolower($0)}' | grep 'microsoft'
+    return $(echo $?)
+}
+
 export DISPLAY=:0
 
 export PATH="/home/jareth/.local/bin":"/usr/local/sbin":"/usr/local/bin":"/usr/sbin":"/usr/bin":"/sbin":"/bin":"/usr/games":"/usr/local/games":"/snap/bin":"/home/jareth/bin"
 
 # Extra WSL paths if this config is being run on WSL
-if [ -f /proc/sys/fs/binfmt_misc/WSLInterop ]; then
+if [[ -z is_wsl ]]; then
     export PATH="/mnt/c/Program Files (x86)/VMware/VMware Player/bin/":"/mnt/c/Program Files (x86)/Common Files/Oracle/Java/javapath":"/Program Files (x86)/Common Files/Intel/Shared Libraries/redist/intel64/compiler":"/mnt/c/WINDOWS/system32":"/mnt/c/WINDOWS":"/mnt/c/WINDOWS/System32/Wbem":"/mnt/c/WINDOWS/System32/WindowsPowerShell/v1.0/":"/mnt/c/WINDOWS/System32/OpenSSH/":"/mnt/c/Program Files/dotnet/":"/mnt/c/Program Files/Calibre2/":"/mnt/c/MinGW/bin":"/mnt/c/Windows/Microsoft.NET/Framework/v4.0.30319":"/mnt/c/Program Files/PuTTY/":"/mnt/c/platform-tools":"/mnt/c/Program Files (x86)/Intel/Intel(R) Management Engine Components/DAL":"/mnt/c/Program Files/Intel/Intel(R) Management Engine Components/DAL":"/mnt/c/HashiCorp/Vagrant/bin":"/mnt/c/Users/Jareth/AppData/Local/Microsoft/WindowsApps":"/mnt/c/Users/Jareth/AppData/Local/Programs/Microsoft VS Code/bin":"/mnt/c/Users/Jareth/AppData/Local/atom/bin":"/mnt/c/Users/Jareth/AppData/Local/Microsoft/WindowsApps":"/mnt/c/Users/Jareth/AppData/Local/atom/bin":"/mnt/c/Users/Jareth/WebDrivers/chromedriver.exe":"/mnt/c/Users/Jareth/Tools/":$PATH
 fi
 export GPG_TTY=$(tty)
@@ -141,38 +180,46 @@ export PATH=$HOME/neovim/bin:$PATH
 export GOPATH=$HOME/go
 export PATH="/usr/local/go/bin":$GOROOT/bin:$GOPATH/bin:$PATH
 
-# EMSDK/Emscripten stuff
-source "/home/jareth/emsdk/emsdk_env.sh" &> /dev/null && echo "Emscripten loaded successfully"
+if [ "$HOSTNAME" = "Jareth-ITX" ]; then
+    # EMSDK/Emscripten stuff
+    source "/home/jareth/emsdk/emsdk_env.sh" &> /dev/null && echo "Emscripten loaded successfully"
 
-# Rust stuff
-. "$HOME/.cargo/env"
+    # Rust stuff
+    . "$HOME/.cargo/env"
+fi
 
 # Node/NVM stuff
-export NVM_DIR="$HOME/.nvm"
-[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
-[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
+if [ -s "/usr/share/nvm/init-nvm.sh" ]; then
+    source /usr/share/nvm/init-nvm.sh
+else
+    export NVM_DIR="$HOME/.nvm"
+    [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
+    [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
+fi
 
-# Platformio stuff
-export PATH=/home/jareth/.platformio/penv/bin:$PATH
+if [ "$HOSTNAME" = "Jareth-ITX" ]; then
+    # Platformio stuff
+    export PATH=/home/jareth/.platformio/penv/bin:$PATH
 
-# Python/pyenv stuff
-export PYENV_ROOT="$HOME/.pyenv"
-export PATH="$PYENV_ROOT/bin:$PATH"
-eval "$(pyenv init -)"
-eval "$(pyenv virtualenv-init -)"
+    # Python/pyenv stuff
+    export PYENV_ROOT="$HOME/.pyenv"
+    export PATH="$PYENV_ROOT/bin:$PATH"
+    eval "$(pyenv init -)"
+    eval "$(pyenv virtualenv-init -)"
 
-# Java stuff
-export JAVA_HOME="/usr/lib/jvm/java-8-openjdk-amd64"
-# WARNING: change this to your JDK folder if you did not follow the above
-#steps to install JDK 8
-export CLASSPATH=.:$JAVA_HOME/jre/lib:$JAVA_HOME/lib:$JAVA_HOME/lib/tools.jar
-export PATH=$JAVA_HOME/bin:$PATH
-# Android sdk related
-export ANDROID_SDK_ROOT="$HOME/android-sdk-linux"
-export PATH=$ANDROID_SDK_ROOT/cmdline-tools/tools/bin:$PATH
+    # Java stuff
+    export JAVA_HOME="/usr/lib/jvm/java-8-openjdk-amd64"
+    # WARNING: change this to your JDK folder if you did not follow the above
+    # steps to install JDK 8
+    export CLASSPATH=.:$JAVA_HOME/jre/lib:$JAVA_HOME/lib:$JAVA_HOME/lib/tools.jar
+    export PATH=$JAVA_HOME/bin:$PATH
+    # Android sdk related
+    export ANDROID_SDK_ROOT="$HOME/android-sdk-linux"
+    export PATH=$ANDROID_SDK_ROOT/cmdline-tools/tools/bin:$PATH
 
-# Qt Stuff
-export Qt_DIR=~/Qt/
+    # Qt Stuff
+    export Qt_DIR=~/Qt/
+fi
 
 export PATH="$HOME/.yarn/bin:$HOME/.config/yarn/global/node_modules/.bin:$PATH"
 
