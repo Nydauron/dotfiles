@@ -4,6 +4,12 @@
  * Copyright: 2017 leofa
  ***********************************************/
 
+configuration {
+    kb-accept-entry: "Control+m,Return,KP_Enter";
+    kb-remove-to-eol: "";
+    kb-row-down: "Control+j,Down,Control+n";
+    kb-row-up: "Control+k";
+}
 * {
     selected-normal-foreground:  rgba ( 249, 249, 249, 100 % );
     foreground:                  rgba ( 196, 203, 212, 100 % );
