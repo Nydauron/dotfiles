@@ -184,9 +184,9 @@ if [ "$HOSTNAME" = "Jareth-ITX" ]; then
     # EMSDK/Emscripten stuff
     source "/home/jareth/emsdk/emsdk_env.sh" &> /dev/null && echo "Emscripten loaded successfully"
 
-    # Rust stuff
-    . "$HOME/.cargo/env"
 fi
+# Rust stuff
+. "$HOME/.cargo/env"
 
 # Node/NVM stuff
 if [ -s "/usr/share/nvm/init-nvm.sh" ]; then
