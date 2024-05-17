@@ -49,5 +49,3 @@ if [ "$HOSTNAME" = "Jareth-ITX" ]; then
     # Set PATH, MANPATH, etc., for Homebrew.
     eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
 fi
-
-. ~/.ssh-agent.sh
