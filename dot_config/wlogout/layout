@@ -1,12 +1,12 @@
 {
     "label" : "lock",
-    "action" : "swaylock",
+    "action" : "loginctl lock-session",
     "text" : "Lock",
     "keybind" : "l"
 }
 {
     "label" : "hibernate",
-    "action" : "swaylock --daemonize && systemctl hibernate",
+    "action" : "loginctl lock-session & sleep 2; systemctl hibernate",
     "text" : "Hibernate",
     "keybind" : "h"
 }
@@ -24,7 +24,7 @@
 }
 {
     "label" : "suspend",
-    "action" : "swaylock --daemonize && systemctl suspend-then-hibernate",
+    "action" : "loginctl lock-session & sleep 2; systemctl suspend-then-hibernate",
     "text" : "Suspend",
     "keybind" : "u"
 }
