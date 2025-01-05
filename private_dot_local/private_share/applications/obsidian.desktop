@@ -1,0 +1,10 @@
+[Desktop Entry]
+Name=Obsidian
+StartupWMClass=obsidian
+Comment=A notetaking app for your second brain
+GenericName=Internet Messenger
+Exec=/bin/obsidian --ozone-platform=wayland --enable-features=UseOzonePlatform,WaylandWindowDecorations
+Icon=discord
+Type=Application
+Categories=Network;Notes;
+Path=/bin

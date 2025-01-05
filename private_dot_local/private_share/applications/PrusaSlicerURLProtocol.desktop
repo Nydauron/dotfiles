@@ -1,0 +1,8 @@
+[Desktop Entry]
+Name=PrusaSlicer URL Protocol
+Exec="/home/jareth/.local/bin/PrusaSlicer" --single-instance %u
+Terminal=false
+Type=Application
+MimeType=x-scheme-handler/prusaslicer;
+StartupNotify=false
+NoDisplay=true

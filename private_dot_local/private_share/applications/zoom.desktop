@@ -1,0 +1,10 @@
+[Desktop Entry]
+Name=Zoom
+StartupWMClass=zoom
+Comment=
+GenericName=Video Chat
+Exec=env XDG_CURRENT_DESKTOP=gnome /usr/bin/zoom
+Icon=zoom
+Type=Application
+Categories=Network;Video Call;
+Path=/usr/bin
