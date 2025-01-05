@@ -2,3 +2,7 @@
 	path = dot_config/nvim
 	url = git@github.com:Nydauron/nvim-config.git
 	branch = master
+
+[submodule ".config/waybar/scripts/waymedia"]
+	path = dot_config/waybar/scripts/waymedia
+	url = https://github.com/lighttigerXIV/waymedia

@@ -4,9 +4,9 @@
     "height": 30, // Waybar height (to be removed for auto height)
     "spacing": 4, // Gaps between modules (4px)
     // Choose the order of the modules
-    "modules-left": ["hyprland/workspaces", "hyprland/window", "sway/scratchpad", "custom/media"],
+    "modules-left": ["custom/wlogout", "tray", "hyprland/workspaces", "sway/scratchpad", "custom/waymedia"],
     "modules-center": ["clock"],
-    "modules-right": ["mpd", "pulseaudio", "network", "cpu", "memory", "temperature", "backlight", "sway/language", "battery", "battery#bat2", "tray", "custom/wlogout"],
+    "modules-right": ["mpd", "pulseaudio", "network", "cpu", "memory", "temperature", "backlight", "sway/language", "battery", "battery#bat2", "custom/swaync"],
     // Modules configuration
     // "sway/workspaces": {
     //     "disable-scroll": true,
@@ -30,6 +30,29 @@
         "format-icons": "⏻",
         "tooltip": false,
     },
+    "custom/swaync": {
+        "on-click": "pkill swaync-client; swaync-client -t",
+        "format": "{icon}",
+        "format-icons": "󱥂",
+        "tooltip": false,
+        "format": "{} {icon}",
+        "format-icons": {
+            "notification": "󱅫",
+            "none": "",
+            "dnd-notification": " ",
+            "dnd-none": "󰂛",
+            "inhibited-notification": " ",
+            "inhibited-none": "",
+            "dnd-inhibited-notification": " ",
+            "dnd-inhibited-none": " ",
+        },
+        "return-type": "json",
+        "exec-if": "which swaync-client",
+        "exec": "swaync-client -swb",
+        "on-click": "sleep 0.1 && swaync-client -t -sw",
+        "on-click-right": "sleep 0.1 && swaync-client -d -sw",
+        "escape": true,
+    },
     "keyboard-state": {
         "numlock": true,
         "capslock": true,
@@ -46,6 +69,7 @@
             "foot": "",
             "discord": "󰙯",
         },
+        "show-special": true,
     },
     "hyprland/submap": {
         "format": "<span style=\"italic\">{}</span>"
@@ -124,7 +148,7 @@
         "critical-threshold": 80,
         // "format-critical": "{temperatureC}°C {icon}",
         "format": "{temperatureC}°C {icon}",
-        "format-icons": ["", "", ""]
+        "format-icons": ["", "", ""]
     },
     "backlight": {
         // "device": "acpi_video1",
@@ -151,7 +175,7 @@
     },
     "network": {
         // "interface": "wlp2*", // (Optional) To force the use of this interface
-        "format-wifi": "{essid} ({signalStrength}%) ",
+        "format-wifi": "{essid} ({signalStrength}%)  ",
         "format-ethernet": "{ipaddr}/{cidr} 󰈀",
         "tooltip-format": "{ifname} via {gwaddr}",
         "format-linked": "{ifname} (No IP) 󱘖",
@@ -164,17 +188,17 @@
         "format": "{volume}% {icon} {format_source}",
         "format-bluetooth": "{volume}% {icon} {format_source}",
         "format-bluetooth-muted": " {icon} {format_source}",
-        "format-muted": " {format_source}",
+        "format-muted": "   {format_source}",
         "format-source": "{volume}% ",
         "format-source-muted": "",
         "format-icons": {
-            "headphone": "",
-            "hands-free": "",
-            "headset": "",
-            "phone": "",
-            "portable": "",
-            "car": "",
-            "default": ["", "", ""]
+            "headphone": " ",
+            "hands-free": " ",
+            "headset": " ",
+            "phone": " ",
+            "portable": " ",
+            "car": " ",
+            "default": ["  ", "  ", "  "]
         },
         "on-click": "pavucontrol"
     },
@@ -189,6 +213,30 @@
         "escape": true,
         "exec": "$HOME/.config/waybar/mediaplayer.py 2> /dev/null" // Script in resources folder
         // "exec": "$HOME/.config/waybar/mediaplayer.py --player spotify 2> /dev/null" // Filter player based on name
-    }
+    },
+    "custom/waymedia": {
+        "format": "{icon}{artist}{divider}{title}",
+        "exec": "~/.config/waybar/scripts/waymedia/waymedia",
+        "interval": 1,
+        "limit": 60,
+        "on-click": "playerctl play-pause",
+        "on-scroll-up": "playerctl next",
+        "on-scroll-down": "playerctl previous",
+        "pause-icon": "   ",
+        "play-icon": "   ",
+        "divider": " - "
+    },
+    "custom/waymedia-buttons": {
+        "format": "{icon}{}",
+        "exec": "~/.config/waybar/scripts/waymedia/waymedia-buttons",
+        "interval": 1,
+        "on-click": "playerctl play-pause",
+        "on-scroll-up": "playerctl next",
+        "on-scroll-down": "playerctl previous",
+        "previous-icon": " 󰒮 ",
+        "skip-icon": " 󰒭 ",
+        "play-icon": "  ",
+        "pause-icon": "  "
+    },
 }
 
